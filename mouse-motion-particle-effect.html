@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Particle Effect</title>
+    <style>
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #f00;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function throttle(func, delay) {
+            let lastCalled = 0;
+            return function(...args) {
+                const now = new Date().getTime();
+                if (now - lastCalled < delay) {
+                    return;
+                }
+                lastCalled = now;
+                func(...args);
+            };
+        }
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 5 + 2;
+            const vx = Math.cos(angle) * speed;
+            const vy = Math.sin(angle) * speed;
+
+            let distance = 0;
+
+            const updateInterval = setInterval(() => {
+                x += vx;
+                y += vy;
+                distance += Math.sqrt(vx * vx + vy * vy);
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+
+                if (x < 150 || x > window.innerWidth - 150 || y < window.pageYOffset + 150 || y > window.innerHeight + window.pageYOffset - 150 || distance >= 100) {
+                    clearInterval(updateInterval);
+                    particle.remove();
+                }
+            }, 30);
+
+            document.body.appendChild(particle);
+        }
+
+        function handleMouseMovement(event) {
+            const x = event.clientX + window.pageXOffset;
+            const y = event.clientY + window.pageYOffset;
+
+            createParticle(x, y);
+        }
+
+        document.addEventListener('mousemove', throttle(handleMouseMovement, 10));
+    </script>
+</body>
+</html>
+
+    
