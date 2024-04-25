@@ -17,7 +17,7 @@
 </head>
 <body>
     <script>
-        function throttle(func, delay) {
+        function FrequencyManagement(func, delay) {
             let lastCalled = 0;
             return function(...args) {
                 const now = new Date().getTime();
@@ -65,9 +65,7 @@
             createParticle(x, y);
         }
 
-        document.addEventListener('mousemove', throttle(handleMouseMovement, 10));
+        document.addEventListener('mousemove', FrequencyManagement(handleMouseMovement, 10));
     </script>
 </body>
 </html>
-
-    
